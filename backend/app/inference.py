@@ -48,6 +48,12 @@ def predict_mask(image_path):
     # Read original image
     original_image = cv2.imread(str(image_path))
 
+    if original_image is None:
+
+        raise ValueError(
+        "Failed to read uploaded image."
+    )
+
     original_height, original_width = original_image.shape[:2]
 
     # Convert BGR → RGB
