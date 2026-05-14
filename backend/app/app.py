@@ -150,20 +150,41 @@ def predict():
         OUTPUT_FOLDER / preview_filename
     )
 
-    preview_image = cv2.imread(str(upload_path))
-
-    cv2.imwrite(
-        str(preview_path),
-        preview_image
+    preview_image = cv2.imread(
+        str(upload_path)
     )
+
+    if preview_image is not None:
+
+        cv2.imwrite(
+            str(preview_path),
+            preview_image
+        )
+
+    else:
+
+        preview_filename = None
 
     # =====================
     # RUN INFERENCE
     # =====================
 
-    original_image, predicted_mask = predict_mask(
-        upload_path
-    )
+    try:
+
+        original_image, predicted_mask = predict_mask(
+            upload_path
+        )
+
+    except Exception as e:
+
+        print(
+            "INFERENCE ERROR:",
+            str(e)
+        )
+
+        return jsonify({
+            "error": str(e)
+        }), 500
 
     # =====================
     # SAVE PREDICTED MASK
@@ -187,14 +208,22 @@ def predict():
     # =====================
 
     return jsonify({
-        "message": "Prediction completed",
-        "preview_url": (
-            f"https://road-extraction-api.onrender.com/outputs/{preview_filename}"
-        ),
-        "mask_url": (
-            f"https://road-extraction-api.onrender.com/outputs/{output_filename}"
-        )
-    })
+
+    "message": "Prediction completed",
+
+    "preview_url": (
+
+        f"https://road-extraction-api.onrender.com/outputs/{preview_filename}"
+
+        if preview_filename
+
+        else None
+    ),
+
+    "mask_url": (
+        f"https://road-extraction-api.onrender.com/outputs/{output_filename}"
+    )
+})
 
 
 # =========================
