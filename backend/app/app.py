@@ -189,10 +189,10 @@ def predict():
     return jsonify({
         "message": "Prediction completed",
         "preview_url": (
-            f"http://127.0.0.1:5000/outputs/{preview_filename}"
+            f"https://road-extraction-api.onrender.com/outputs/{preview_filename}"
         ),
         "mask_url": (
-            f"http://127.0.0.1:5000/outputs/{output_filename}"
+            f"https://road-extraction-api.onrender.com/outputs/{output_filename}"
         )
     })
 
