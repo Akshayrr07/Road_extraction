@@ -23,7 +23,6 @@ env/
 Thumbs.db
 
 # Model Files
-*.pth
 *.pt
 *.onnx
 
@@ -44,3 +43,8 @@ instance/
 
 # Cache
 .cache/
+
+node_modules/
+dist/
+__pycache__/
+*.pyc
