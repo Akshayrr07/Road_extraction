@@ -10,7 +10,7 @@ import cv2
 import numpy as np
 import torch
 
-from model import UNetModel
+from app.model import UNetModel
 
 
 # =========================

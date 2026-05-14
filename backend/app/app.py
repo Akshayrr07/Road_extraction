@@ -11,7 +11,7 @@ from pathlib import Path
 import uuid
 import cv2
 
-from inference import predict_mask
+from app.inference import predict_mask
 
 # =========================
 # BASE PATHS
