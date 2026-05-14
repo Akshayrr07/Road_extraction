@@ -82,6 +82,13 @@ optimizer = torch.optim.Adam(
     lr=LEARNING_RATE
 )
 
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+    optimizer,
+    mode="min",
+    factor=0.5,
+    patience=3
+)
+
 
 # =========================
 # IOU METRIC
@@ -173,6 +180,8 @@ for epoch in range(EPOCHS):
 
     avg_val_loss = val_loss / len(val_loader)
     avg_val_iou = val_iou / len(val_loader)
+
+    scheduler.step(avg_val_loss)
 
     # =====================
     # LOGGING
