@@ -16,12 +16,13 @@ from app.model import UNetModel
 # =========================
 # CONFIG
 # =========================
+torch.set_num_threads(1)
 
 MODEL_PATH = BASE_DIR.parent / "saved_models" / "best_model.pth"
 
 DEVICE = torch.device("cpu")
 
-IMAGE_SIZE = 256
+IMAGE_SIZE = 128
 
 
 # =========================
@@ -86,13 +87,15 @@ def predict_mask(image_path):
     ).unsqueeze(0).to(DEVICE)
 
     # Prediction
-    with torch.no_grad():
+    with torch.inference_mode():
 
         prediction = model(image_tensor)
 
         prediction = torch.sigmoid(prediction)
 
         prediction = prediction.squeeze().cpu().numpy()
+
+        torch.inference_mode()
 
     # Threshold
     prediction = (prediction > 0.5).astype(np.uint8)
