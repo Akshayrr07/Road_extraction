@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
+import "./App.css"
+
 
 function App() {
   const [image, setImage] = useState(null);
@@ -62,76 +64,71 @@ function App() {
     }
   };
 
-  return (
-    <div style={styles.container}>
-      <h1 style={{ color: "#222" }}>AI Satellite Road Extraction</h1>
+return (
+  <div className="page">
+    
+    <header className="hero-section">
+      <h1>AI Satellite Road Extraction</h1>
+      <p>Deep Learning Terrain Analysis</p>
+    </header>
 
-      <input
-        type="file"
-        accept=".png,.jpg,.jpeg,.tif,.tiff"
-        onChange={handleImageChange}
-      />
+    <main className="workspace">
 
-      <br />
+      {/* Upload Section */}
+      <section className="upload-section">
 
-      <button onClick={handlePredict} style={styles.button}>
-        {loading ? "Predicting..." : "Extract Roads"}
-      </button>
+        <input
+          type="file"
+          accept=".png,.jpg,.jpeg,.tif,.tiff"
+          onChange={handleImageChange}
+        />
 
-      <div style={styles.resultContainer}>
-        {serverPreview && (
-          <div style={{ marginTop: "40px" }}>
+        <button onClick={handlePredict}>
+          {loading ? "Predicting..." : "Extract Roads"}
+        </button>
+
+      </section>
+
+      {/* Preview + Result Section */}
+      <section className="result-section">
+
+        {/* Uploaded / Converted Preview */}
+        {(preview || serverPreview) && (
+          <div className="preview-card">
+
             <h2>Uploaded Image</h2>
-            <img src={serverPreview} alt="Preview" style={styles.image} />
+
+            <img
+              src={serverPreview || preview}
+              alt="Preview"
+            />
+
           </div>
         )}
 
+        {/* Prediction Result */}
         {result && (
-          <div style={{ marginTop: "40px" }}>
+          <div className="result-card">
+
             <h2>Predicted Road Mask</h2>
-            <img src={result} alt="Prediction" style={styles.image} />
+
+            <img
+              src={result}
+              alt="Prediction"
+            />
+
           </div>
         )}
-      </div>
-    </div>
-  );
+
+      </section>
+
+    </main>
+
+  </div>
+);
 }
 
-const styles = {
-  container: {
-    textAlign: "center",
-    padding: "30px",
-    fontFamily: "Arial",
-    background: "#f4f4f4",
-    minHeight: "100vh",
-  },
-  button: {
-    marginTop: "20px",
-    padding: "12px 24px",
-    cursor: "pointer",
-    backgroundColor: "#222",
-    color: "white",
-    border: "none",
-    borderRadius: "8px",
-    fontSize: "16px",
-  },
-  image: {
-    width: "50%",
-    maxWidth: "400px",
-    marginTop: "20px",
-    borderRadius: "12px",
-    border: "2px solid #ccc",
-    boxShadow: "0px 4px 12px rgba(0,0,0,0.1)",
-    objectFit: "contain",
-  },
-  resultContainer: {
-    display: "flex",
-    justifyContent: "center",
-    gap: "40px",
-    marginTop: "40px",
-    flexWrap: "wrap",
-  },
-};
+
 
 export default App;
 

@@ -1,0 +1,29 @@
+body{
+    background:#0A0F1F ;
+    color:white;
+    margin:0;
+    padding:0;
+    min-height:100vh;
+    font-family: Arial, Helvetica, sans-serif;
+}
+#root {
+  min-height: 100vh;
+}
+.page{
+    padding: 40px;
+    flex-direction: column;
+    align-items:center;
+    display: flex;
+    min-height: 100vh;
+}
+
+.hero-section{
+    text-align:center;
+    margin-bottom:large spacing;
+}
+.hero-section h1{
+    font-size: 3rem;
+}
+.hero-section p{
+    font-size: 1 rem;
+}
