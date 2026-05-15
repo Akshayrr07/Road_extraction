@@ -91,9 +91,7 @@ Road_extraction/
 └── README.md
 
 ```
-# 📘 Documentation
 
-- [Docker & Setup Guide](docs/docker.md)
 ---
 
 ## ⚙️ Training Configuration
@@ -184,6 +182,7 @@ Focused on:
 * Full Stack Development
 * Computer Vision Systems
 * Deployment Engineering
+* Satelite image Extraction
 
 ---
 
