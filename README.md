@@ -182,6 +182,7 @@ Focused on:
 * Full Stack Development
 * Computer Vision Systems
 * Deployment Engineering
+* Satelite image Extraction
 
 ---
 
