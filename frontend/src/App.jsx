@@ -77,11 +77,18 @@ return (
       {/* Upload Section */}
       <section className="upload-section">
 
-        <input
-          type="file"
-          accept=".png,.jpg,.jpeg,.tif,.tiff"
-          onChange={handleImageChange}
-        />
+        <label className="upload-label">
+
+    <input
+    type="file"
+    accept=".png,.jpg,.jpeg,.tif,.tiff"
+    onChange={handleImageChange}
+    hidden
+  />
+
+  Select Terrain File
+
+</label>
 
         <button onClick={handlePredict}>
           {loading ? "Predicting..." : "Extract Roads"}
