@@ -9,27 +9,28 @@ function App() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [serverPreview, setServerPreview] = useState(null);
-
+  const [message, setMessage] = useState("");
   // =========================
   // HANDLE IMAGE
-  // =========================
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    setImage(file);
+const handleImageChange = (event) => {
+  const file = event.target.files[0];
 
-    if (file.type === "image/png" || file.type === "image/jpeg") {
-      setPreview(URL.createObjectURL(file));
-    } else {
-      setPreview(null);
-    }
-  };
+  setImage(file);
+  setMessage("");
+
+  if (file.type === "image/png" || file.type === "image/jpeg") {
+    setPreview(URL.createObjectURL(file));
+  } else {
+    setPreview(null);
+  }
+};
 
   // =========================
   // HANDLE PREDICTION
   // =========================
   const handlePredict = async () => {
     if (!image) {
-      alert("Please upload an image.");
+      setMessage("Please upload an image first.");
       return;
     }
 
@@ -37,6 +38,7 @@ function App() {
     formData.append("image", image);
 
     try {
+      setMessage("");
       setLoading(true);
 
       const response = await axios.post(
@@ -54,16 +56,23 @@ function App() {
     } catch (error) {
       console.error("FULL ERROR:", error);
       console.error("BACKEND RESPONSE:", error.response?.data);
-      alert(
-        JSON.stringify(
-          error.response?.data || "Prediction failed"
-        )
-      );
+      setMessage(
+  error.response?.data?.error ||
+  "Prediction failed. Please try again."
+);
     } finally {
       setLoading(false);
     }
+
+   
   };
 
+  const handleRemoveImage = () => {
+    setImage(null);
+    setPreview(null);
+    setResult(null);
+    setServerPreview(null);
+  };
 return (
   <div className="page">
     
@@ -93,6 +102,15 @@ return (
         <button onClick={handlePredict}>
           {loading ? "Predicting..." : "Extract Roads"}
         </button>
+
+        {preview && (
+  <button
+    className="remove-btn"
+    onClick={handleRemoveImage}
+  >
+    Remove Image
+  </button>
+)}
 
       </section>
 
@@ -128,6 +146,11 @@ return (
         )}
 
       </section>
+      {message && (
+  <p className="status-text">
+    {message}
+  </p>
+)}
 
     </main>
 
