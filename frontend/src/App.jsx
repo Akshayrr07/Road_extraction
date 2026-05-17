@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
+import "./App.css"
+
 
 function App() {
   const [image, setImage] = useState(null);
@@ -7,27 +9,28 @@ function App() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [serverPreview, setServerPreview] = useState(null);
-
+  const [message, setMessage] = useState("");
   // =========================
   // HANDLE IMAGE
-  // =========================
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    setImage(file);
+const handleImageChange = (event) => {
+  const file = event.target.files[0];
 
-    if (file.type === "image/png" || file.type === "image/jpeg") {
-      setPreview(URL.createObjectURL(file));
-    } else {
-      setPreview(null);
-    }
-  };
+  setImage(file);
+  setMessage("");
+
+  if (file.type === "image/png" || file.type === "image/jpeg") {
+    setPreview(URL.createObjectURL(file));
+  } else {
+    setPreview(null);
+  }
+};
 
   // =========================
   // HANDLE PREDICTION
   // =========================
   const handlePredict = async () => {
     if (!image) {
-      alert("Please upload an image.");
+      setMessage("Please upload an image first.");
       return;
     }
 
@@ -35,6 +38,7 @@ function App() {
     formData.append("image", image);
 
     try {
+      setMessage("");
       setLoading(true);
 
       const response = await axios.post(
@@ -52,86 +56,109 @@ function App() {
     } catch (error) {
       console.error("FULL ERROR:", error);
       console.error("BACKEND RESPONSE:", error.response?.data);
-      alert(
-        JSON.stringify(
-          error.response?.data || "Prediction failed"
-        )
-      );
+      setMessage(
+  error.response?.data?.error ||
+  "Prediction failed. Please try again."
+);
     } finally {
       setLoading(false);
     }
+
+   
   };
 
-  return (
-    <div style={styles.container}>
-      <h1 style={{ color: "#222" }}>AI Satellite Road Extraction</h1>
+  const handleRemoveImage = () => {
+    setImage(null);
+    setPreview(null);
+    setResult(null);
+    setServerPreview(null);
+  };
+return (
+  <div className="page">
+    
+    <header className="hero-section">
+      <h1>AI Satellite Road Extraction</h1>
+      <p>Deep Learning Terrain Analysis</p>
+    </header>
 
-      <input
-        type="file"
-        accept=".png,.jpg,.jpeg,.tif,.tiff"
-        onChange={handleImageChange}
-      />
+    <main className="workspace">
 
-      <br />
+      {/* Upload Section */}
+      <section className="upload-section">
 
-      <button onClick={handlePredict} style={styles.button}>
-        {loading ? "Predicting..." : "Extract Roads"}
-      </button>
+        <label className="upload-label">
 
-      <div style={styles.resultContainer}>
-        {serverPreview && (
-          <div style={{ marginTop: "40px" }}>
+    <input
+    type="file"
+    accept=".png,.jpg,.jpeg,.tif,.tiff"
+    onChange={handleImageChange}
+    hidden
+  />
+
+  Select Terrain File
+
+</label>
+
+        <button onClick={handlePredict}>
+          {loading ? "Predicting..." : "Extract Roads"}
+        </button>
+
+        {preview && (
+  <button
+    className="remove-btn"
+    onClick={handleRemoveImage}
+  >
+    Remove Image
+  </button>
+)}
+
+      </section>
+
+      {/* Preview + Result Section */}
+      <section className="result-section">
+
+        {/* Uploaded / Converted Preview */}
+        {(preview || serverPreview) && (
+          <div className="preview-card">
+
             <h2>Uploaded Image</h2>
-            <img src={serverPreview} alt="Preview" style={styles.image} />
+
+            <img
+              src={serverPreview || preview}
+              alt="Preview"
+            />
+
           </div>
         )}
 
+        {/* Prediction Result */}
         {result && (
-          <div style={{ marginTop: "40px" }}>
+          <div className="result-card">
+
             <h2>Predicted Road Mask</h2>
-            <img src={result} alt="Prediction" style={styles.image} />
+
+            <img
+              src={result}
+              alt="Prediction"
+            />
+
           </div>
         )}
-      </div>
-    </div>
-  );
+
+      </section>
+      {message && (
+  <p className="status-text">
+    {message}
+  </p>
+)}
+
+    </main>
+
+  </div>
+);
 }
 
-const styles = {
-  container: {
-    textAlign: "center",
-    padding: "30px",
-    fontFamily: "Arial",
-    background: "#f4f4f4",
-    minHeight: "100vh",
-  },
-  button: {
-    marginTop: "20px",
-    padding: "12px 24px",
-    cursor: "pointer",
-    backgroundColor: "#222",
-    color: "white",
-    border: "none",
-    borderRadius: "8px",
-    fontSize: "16px",
-  },
-  image: {
-    width: "50%",
-    maxWidth: "400px",
-    marginTop: "20px",
-    borderRadius: "12px",
-    border: "2px solid #ccc",
-    boxShadow: "0px 4px 12px rgba(0,0,0,0.1)",
-    objectFit: "contain",
-  },
-  resultContainer: {
-    display: "flex",
-    justifyContent: "center",
-    gap: "40px",
-    marginTop: "40px",
-    flexWrap: "wrap",
-  },
-};
+
 
 export default App;
 
